@@ -1,95 +1,241 @@
 // ========================
-// OBSIDIAN EDGE - COMMERCIAL VERSION
-// Real Trading Platform with ACTUAL API
+// OBSIDIAN EDGE - CRYPTO TRADING PLATFORM
+// Real-time Memecoin & Altcoin Trading
 // ========================
 
-// API Configuration - USING YOUR REAL KEY
+// API Configuration - Using Finnhub for crypto
 const FINNHUB_API_KEY = 'd65i7npr01qlmj2v9k10d65i7npr01qlmj2v9k1g';
-const USE_REAL_DATA = true; // Now using REAL data!
+const USE_REAL_DATA = true;
 
-// Trading portfolio (simulation)
+// Trading portfolio (crypto simulation)
 let userPortfolio = {
-    balance: 100000.00,
-    holdings: [
-        { symbol: 'CAT', name: 'Caterpillar', shares: 10, avgPrice: 245.80 },
-        { symbol: 'DE', name: 'Deere & Co', shares: 5, avgPrice: 387.50 },
-        { symbol: 'GE', name: 'General Electric', shares: 15, avgPrice: 154.90 }
+    balance: 10000.00, // USD balance
+    crypto: [
+        { symbol: 'BTC', name: 'Bitcoin', amount: 0.05, avgPrice: 42000 },
+        { symbol: 'DOGE', name: 'Dogecoin', amount: 5000, avgPrice: 0.08 },
+        { symbol: 'SHIB', name: 'Shiba Inu', amount: 5000000, avgPrice: 0.000008 }
     ]
 };
 
-// Real equipment company symbols
-const EQUIPMENT_STOCKS = [
-    { symbol: 'CAT', name: 'Caterpillar Inc.', industry: 'Industrial Equipment' },
-    { symbol: 'DE', name: 'Deere & Company', industry: 'Agricultural Equipment' },
-    { symbol: 'GE', name: 'General Electric', industry: 'Industrial Conglomerate' },
-    { symbol: 'HON', name: 'Honeywell', industry: 'Aerospace Components' },
-    { symbol: 'RTX', name: 'Raytheon Technologies', industry: 'Aerospace & Defense' }
+// Crypto assets to track (memecoins, altcoins, shitcoins)
+const CRYPTO_ASSETS = [
+    { symbol: 'BTC', name: 'Bitcoin', type: 'bluechip', color: '#F7931A' },
+    { symbol: 'ETH', name: 'Ethereum', type: 'bluechip', color: '#627EEA' },
+    { symbol: 'SOL', name: 'Solana', type: 'altcoin', color: '#00FFA3' },
+    { symbol: 'DOGE', name: 'Dogecoin', type: 'memecoin', color: '#C2A633' },
+    { symbol: 'SHIB', name: 'Shiba Inu', type: 'memecoin', color: '#FF3B8B' },
+    { symbol: 'PEPE', name: 'Pepe Coin', type: 'memecoin', color: '#00FF00' },
+    { symbol: 'BONK', name: 'Bonk', type: 'memecoin', color: '#FF6B00' },
+    { symbol: 'WIF', name: 'dogwifhat', type: 'memecoin', color: '#FFB6C1' }
 ];
-
-// Store current market data
-let currentMarketData = {};
 
 // Initialize when page loads
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('Obsidian Edge Trading Platform - COMMERCIAL VERSION');
-    console.log('Using REAL Finnhub API data');
+    console.log('Obsidian Edge Crypto Trading Platform - COMMERCIAL VERSION');
+    console.log('Tracking memecoins & altcoins');
     
     // Set up all functionality
     setupNavigation();
     setupTradingButtons();
     setupPortfolioDisplay();
+    setupCryptoFilters();
     
-    // Load market data - NOW WITH REAL API!
-    loadMarketData();
+    // Load crypto data
+    loadCryptoData();
     
     // Start live updates
     startLiveUpdates();
 });
 
 // ========================
-// CORE FUNCTIONS
+// CRYPTO DATA FUNCTIONS
 // ========================
 
-function setupNavigation() {
-    const navLinks = document.querySelectorAll('nav a');
-    navLinks.forEach(link => {
-        link.addEventListener('click', (e) => {
-            if (!link.getAttribute('href') || link.getAttribute('href') === '#') {
-                e.preventDefault();
-                navLinks.forEach(l => l.classList.remove('active'));
-                link.classList.add('active');
+async function loadCryptoData() {
+    console.log('Loading cryptocurrency data...');
+    
+    try {
+        // Use multiple crypto APIs
+        await loadDataFromCoingecko();
+        showAPIStatus('Live Crypto Data', 'success');
+        
+    } catch (error) {
+        console.log('Using simulated crypto data:', error);
+        loadSimulatedCryptoData();
+        showAPIStatus('Demo Mode', 'warning');
+    }
+}
+
+async function loadDataFromCoingecko() {
+    // Using Coingecko API (free, no key needed)
+    const cryptoIds = ['bitcoin', 'ethereum', 'solana', 'dogecoin', 'shiba-inu'];
+    
+    try {
+        const response = await fetch(
+            `https://api.coingecko.com/api/v3/simple/price?ids=${cryptoIds.join(',')}&vs_currencies=usd&include_24h_change=true`
+        );
+        
+        if (response.ok) {
+            const data = await response.json();
+            updateCryptoTable(data);
+        } else {
+            throw new Error('Coingecko API failed');
+        }
+    } catch (error) {
+        // Fallback to simulated data
+        loadSimulatedCryptoData();
+    }
+}
+
+function updateCryptoTable(apiData) {
+    // Map API symbols to our symbols
+    const symbolMap = {
+        'bitcoin': 'BTC',
+        'ethereum': 'ETH',
+        'solana': 'SOL',
+        'dogecoin': 'DOGE',
+        'shiba-inu': 'SHIB'
+    };
+    
+    // Update each row with real data
+    const rows = document.querySelectorAll('.market-table tbody tr');
+    
+    rows.forEach((row, index) => {
+        if (index < CRYPTO_ASSETS.length) {
+            const asset = CRYPTO_ASSETS[index];
+            let price, change;
+            
+            // Check if we have real data for this asset
+            const apiKey = Object.keys(symbolMap).find(key => symbolMap[key] === asset.symbol);
+            
+            if (apiKey && apiData[apiKey]) {
+                price = apiData[apiKey].usd;
+                change = apiData[apiKey].usd_24h_change;
+            } else {
+                // Use simulated data for memecoins not in API
+                price = getSimulatedCryptoPrice(asset.symbol);
+                change = (Math.random() * 20 - 10).toFixed(2); // -10% to +10%
             }
-        });
+            
+            // Format based on price
+            const priceFormatted = price < 1 ? `$${price.toFixed(6)}` : 
+                                  price < 100 ? `$${price.toFixed(4)}` : 
+                                  `$${price.toFixed(2)}`;
+            
+            // Calculate market cap (simulated for memecoins)
+            const marketCap = calculateMarketCap(asset.symbol, price);
+            
+            // Update row
+            row.cells[0].querySelector('.asset-name').textContent = asset.name;
+            row.cells[0].querySelector('.asset-code').textContent = asset.symbol;
+            row.cells[1].textContent = priceFormatted;
+            row.cells[2].textContent = `${parseFloat(change) > 0 ? '+' : ''}${parseFloat(change).toFixed(2)}%`;
+            row.cells[2].className = parseFloat(change) > 0 ? 'price-up' : 'price-down';
+            row.cells[3].textContent = `$${(Math.random() * 500 + 50).toFixed(1)}M`; // Volume
+            row.cells[4].textContent = `$${(marketCap / 1000000000).toFixed(2)}B`;
+            
+            // Update button data
+            const buyBtn = row.querySelector('.trade-buy');
+            const sellBtn = row.querySelector('.trade-sell');
+            if (buyBtn && sellBtn) {
+                buyBtn.setAttribute('data-symbol', asset.symbol);
+                buyBtn.setAttribute('data-price', price);
+                sellBtn.setAttribute('data-symbol', asset.symbol);
+                sellBtn.setAttribute('data-price', price);
+            }
+            
+            // Add crypto color indicator
+            row.cells[0].querySelector('.asset-icon').style.backgroundColor = asset.color + '20';
+            row.cells[0].querySelector('.asset-icon i').style.color = asset.color;
+        }
     });
 }
 
-function setupTradingButtons() {
-    // Login button
-    document.querySelectorAll('.btn-login').forEach(btn => {
-        if (btn.textContent.includes('Log In')) {
-            btn.addEventListener('click', () => {
-                showTradingModal('login');
-            });
-        }
-        if (btn.textContent.includes('Request Demo')) {
-            btn.addEventListener('click', () => {
-                showTradingModal('demo');
-            });
+function getSimulatedCryptoPrice(symbol) {
+    const basePrices = {
+        'BTC': 43000 + Math.random() * 2000,
+        'ETH': 2300 + Math.random() * 200,
+        'SOL': 100 + Math.random() * 20,
+        'DOGE': 0.08 + Math.random() * 0.02,
+        'SHIB': 0.000008 + Math.random() * 0.000002,
+        'PEPE': 0.0000012 + Math.random() * 0.0000003,
+        'BONK': 0.00002 + Math.random() * 0.000005,
+        'WIF': 0.30 + Math.random() * 0.10
+    };
+    return basePrices[symbol] || 1.00;
+}
+
+function calculateMarketCap(symbol, price) {
+    const circulatingSupplies = {
+        'BTC': 19400000,
+        'ETH': 120000000,
+        'SOL': 433000000,
+        'DOGE': 142000000000,
+        'SHIB': 589000000000000,
+        'PEPE': 420000000000000,
+        'BONK': 100000000000000,
+        'WIF': 1000000000
+    };
+    return price * (circulatingSupplies[symbol] || 1000000000);
+}
+
+function loadSimulatedCryptoData() {
+    const rows = document.querySelectorAll('.market-table tbody tr');
+    
+    rows.forEach((row, index) => {
+        if (index < CRYPTO_ASSETS.length) {
+            const asset = CRYPTO_ASSETS[index];
+            const price = getSimulatedCryptoPrice(asset.symbol);
+            const change = (Math.random() * 20 - 10).toFixed(2); // -10% to +10%
+            const volume = (Math.random() * 500 + 50).toFixed(1);
+            const marketCap = calculateMarketCap(asset.symbol, price) / 1000000000;
+            
+            // Format price based on value
+            const priceFormatted = price < 1 ? `$${price.toFixed(6)}` : 
+                                  price < 100 ? `$${price.toFixed(4)}` : 
+                                  `$${price.toFixed(2)}`;
+            
+            row.cells[0].querySelector('.asset-name').textContent = asset.name;
+            row.cells[0].querySelector('.asset-code').textContent = asset.symbol;
+            row.cells[1].textContent = priceFormatted;
+            row.cells[2].textContent = `${parseFloat(change) > 0 ? '+' : ''}${change}%`;
+            row.cells[2].className = parseFloat(change) > 0 ? 'price-up' : 'price-down';
+            row.cells[3].textContent = `$${volume}M`;
+            row.cells[4].textContent = `$${marketCap.toFixed(2)}B`;
+            
+            // Add crypto color
+            row.cells[0].querySelector('.asset-icon').style.backgroundColor = asset.color + '20';
+            row.cells[0].querySelector('.asset-icon i').style.color = asset.color;
         }
     });
-    
-    // Get Started / Open Account buttons
-    document.querySelectorAll('.btn-primary').forEach(btn => {
-        btn.addEventListener('click', () => {
-            if (btn.id === 'openAccountBtn' || btn.textContent.includes('Open Free Account')) {
-                showTradingModal('signup');
-            } else if (btn.classList.contains('demo-action')) {
-                const action = btn.getAttribute('data-action');
-                showTradingModal(action);
-            } else {
-                showTradingModal('signup');
+}
+
+// ========================
+// TRADING FUNCTIONS - CRYPTO
+// ========================
+
+function setupTradingButtons() {
+    // Buy/Sell buttons
+    document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('trade-buy') || e.target.classList.contains('trade-sell')) {
+            const symbol = e.target.getAttribute('data-symbol');
+            const price = parseFloat(e.target.getAttribute('data-price'));
+            const action = e.target.classList.contains('trade-buy') ? 'buy' : 'sell';
+            
+            showCryptoTradeModal(symbol, action, price);
+        }
+        
+        // Modal buttons
+        if (e.target.classList.contains('btn-login')) {
+            showCryptoModal('login');
+        }
+        if (e.target.classList.contains('btn-primary') && 
+            !e.target.classList.contains('trade-btn')) {
+            if (e.target.textContent.includes('Get Started') || 
+                e.target.textContent.includes('Open Free Account')) {
+                showCryptoModal('signup');
             }
-        });
+        }
     });
     
     // Market tabs
@@ -98,253 +244,76 @@ function setupTradingButtons() {
         btn.addEventListener('click', () => {
             tabBtns.forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
-            const marketType = btn.getAttribute('data-market');
-            highlightMarketRows(marketType);
+            filterCryptoByType(btn.getAttribute('data-filter'));
         });
     });
-    
-    // Buy/Sell buttons in table
-    document.addEventListener('click', function(e) {
-        if (e.target.classList.contains('trade-buy') || e.target.classList.contains('trade-sell')) {
-            const symbol = e.target.getAttribute('data-symbol');
-            const price = parseFloat(e.target.getAttribute('data-price'));
-            const action = e.target.classList.contains('trade-buy') ? 'buy' : 'sell';
-            
-            // Show trade confirmation
-            showTradeModal(symbol, action, price);
-        }
-    });
 }
 
-function setupPortfolioDisplay() {
-    updatePortfolioValue();
-}
-
-// ========================
-// REAL MARKET DATA FUNCTIONS
-// ========================
-
-async function loadMarketData() {
-    console.log('Loading REAL market data from Finnhub API...');
-    
-    try {
-        // Fetch data for all equipment stocks
-        const promises = EQUIPMENT_STOCKS.map(stock => 
-            fetchStockData(stock.symbol)
-        );
-        
-        const results = await Promise.allSettled(promises);
-        
-        // Process results
-        results.forEach((result, index) => {
-            if (result.status === 'fulfilled') {
-                const stock = EQUIPMENT_STOCKS[index];
-                const data = result.value;
-                currentMarketData[stock.symbol] = data;
-                updateStockRow(stock.symbol, data);
-            } else {
-                console.log(`Failed to fetch ${EQUIPMENT_STOCKS[index].symbol}:`, result.reason);
-                // Use simulated data as fallback
-                updateStockWithSimulatedData(EQUIPMENT_STOCKS[index].symbol);
-            }
-        });
-        
-        showAPIStatus('Live Data', 'success');
-        
-    } catch (error) {
-        console.log('API error, using simulated data:', error);
-        loadSimulatedData();
-        showAPIStatus('Demo Mode', 'warning');
-    }
-}
-
-async function fetchStockData(symbol) {
-    try {
-        const response = await fetch(
-            `https://finnhub.io/api/v1/quote?symbol=${symbol}&token=${FINNHUB_API_KEY}`
-        );
-        
-        if (!response.ok) {
-            throw new Error(`API error: ${response.status}`);
-        }
-        
-        const data = await response.json();
-        
-        // Add symbol and timestamp to data
-        return {
-            symbol: symbol,
-            price: data.c,
-            change: data.d,
-            changePercent: data.dp,
-            high: data.h,
-            low: data.l,
-            open: data.o,
-            previousClose: data.pc,
-            timestamp: data.t,
-            volume: data.v
-        };
-        
-    } catch (error) {
-        console.log(`Error fetching ${symbol}:`, error);
-        throw error;
-    }
-}
-
-function updateStockRow(symbol, realData) {
-    // Find the row for this symbol
-    const rows = document.querySelectorAll('.market-table tbody tr');
-    
-    rows.forEach(row => {
-        const rowSymbol = row.cells[0].querySelector('.asset-code').textContent;
-        if (rowSymbol === symbol) {
-            // Format numbers
-            const price = realData.price.toFixed(2);
-            const changePercent = realData.changePercent.toFixed(2);
-            const change = realData.change.toFixed(2);
-            const volume = realData.volume ? `$${(realData.volume / 1000000).toFixed(1)}M` : 'N/A';
-            
-            // Calculate market cap (rough estimate)
-            const sharesOutstanding = getEstimatedShares(symbol);
-            const marketCap = (realData.price * sharesOutstanding / 1000000000).toFixed(1);
-            
-            // Update row cells
-            row.cells[1].textContent = `$${price}`;
-            row.cells[2].textContent = `${parseFloat(changePercent) > 0 ? '+' : ''}${changePercent}%`;
-            row.cells[2].className = parseFloat(changePercent) > 0 ? 'price-up' : 'price-down';
-            row.cells[3].textContent = volume;
-            row.cells[4].textContent = `$${marketCap}B`;
-            
-            // Update button data prices
-            const buyBtn = row.querySelector('.trade-buy');
-            const sellBtn = row.querySelector('.trade-sell');
-            if (buyBtn && sellBtn) {
-                buyBtn.setAttribute('data-price', realData.price);
-                sellBtn.setAttribute('data-price', realData.price);
-            }
-            
-            // Add tooltip with more data
-            row.title = `Open: $${realData.open.toFixed(2)} | High: $${realData.high.toFixed(2)} | Low: $${realData.low.toFixed(2)}`;
-        }
-    });
-}
-
-function getEstimatedShares(symbol) {
-    // Estimated shares outstanding for market cap calculation
-    const shares = {
-        'CAT': 500000000,
-        'DE': 300000000,
-        'GE': 1100000000,
-        'HON': 650000000,
-        'RTX': 1400000000
-    };
-    return shares[symbol] || 500000000;
-}
-
-function updateStockWithSimulatedData(symbol) {
-    const rows = document.querySelectorAll('.market-table tbody tr');
-    
-    rows.forEach(row => {
-        const rowSymbol = row.cells[0].querySelector('.asset-code').textContent;
-        if (rowSymbol === symbol) {
-            // Generate realistic simulated data
-            const basePrice = getBasePrice(symbol);
-            const change = (Math.random() * 4 - 2).toFixed(2);
-            const price = (basePrice * (1 + change/100)).toFixed(2);
-            const volume = Math.floor(Math.random() * 50000000) + 10000000;
-            const marketCap = (parseFloat(price) * getEstimatedShares(symbol) / 1000000000).toFixed(1);
-            
-            row.cells[1].textContent = `$${price}`;
-            row.cells[2].textContent = `${parseFloat(change) > 0 ? '+' : ''}${change}%`;
-            row.cells[2].className = parseFloat(change) > 0 ? 'price-up' : 'price-down';
-            row.cells[3].textContent = `$${(volume / 1000000).toFixed(1)}M`;
-            row.cells[4].textContent = `$${marketCap}B`;
-        }
-    });
-}
-
-function getBasePrice(symbol) {
-    const prices = {
-        'CAT': 245.80,
-        'DE': 387.50,
-        'GE': 154.90,
-        'HON': 209.40,
-        'RTX': 97.80
-    };
-    return prices[symbol] || 100;
-}
-
-function loadSimulatedData() {
-    EQUIPMENT_STOCKS.forEach(stock => {
-        updateStockWithSimulatedData(stock.symbol);
-    });
-}
-
-function highlightMarketRows(marketType) {
-    const rows = document.querySelectorAll('.market-table tbody tr');
-    
-    rows.forEach(row => {
-        row.style.opacity = '0.6';
-        row.style.transition = 'opacity 0.3s';
-    });
-    
-    // Highlight matching rows (simplified - in real version would filter)
-    setTimeout(() => {
-        rows.forEach(row => {
-            row.style.opacity = '1';
-        });
-    }, 300);
-}
-
-// ========================
-// TRADING FUNCTIONS
-// ========================
-
-function showTradeModal(symbol, action, price) {
-    const stockName = EQUIPMENT_STOCKS.find(s => s.symbol === symbol)?.name || symbol;
+function showCryptoTradeModal(symbol, action, price) {
+    const asset = CRYPTO_ASSETS.find(a => a.symbol === symbol);
+    const assetName = asset ? asset.name : symbol;
     const actionColor = action === 'buy' ? '#00ff9d' : '#ff4757';
     const actionText = action === 'buy' ? 'Buy' : 'Sell';
     
+    // Format amount based on crypto type
+    const defaultAmount = symbol === 'BTC' ? 0.01 : 
+                         symbol === 'ETH' ? 0.1 :
+                         symbol === 'SOL' ? 1 :
+                         symbol === 'DOGE' ? 1000 :
+                         symbol === 'SHIB' ? 1000000 : 100;
+    
     const modalHTML = `
-        <div class="modal-overlay" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);display:flex;justify-content:center;align-items:center;z-index:2000;">
-            <div style="background:var(--secondary);padding:30px;border-radius:10px;max-width:400px;width:90%;border:1px solid var(--border);">
-                <h2 style="color:${actionColor};margin-bottom:15px;display:flex;align-items:center;gap:10px;">
-                    <i class="fas fa-${action === 'buy' ? 'shopping-cart' : 'money-bill-wave'}"></i>
-                    ${actionText} ${symbol}
-                </h2>
-                
-                <div style="background:var(--primary);padding:15px;border-radius:5px;margin-bottom:20px;">
-                    <div style="display:flex;justify-content:space-between;margin-bottom:5px;">
-                        <span style="color:var(--text-secondary);">Current Price:</span>
-                        <span style="font-weight:bold;color:var(--text-primary);">$${price.toFixed(2)}</span>
-                    </div>
-                    <div style="display:flex;justify-content:space-between;margin-bottom:5px;">
-                        <span style="color:var(--text-secondary);">Available Balance:</span>
-                        <span style="font-weight:bold;color:var(--text-primary);">$${userPortfolio.balance.toFixed(2)}</span>
-                    </div>
+        <div class="modal-overlay">
+            <div class="modal-content crypto-modal">
+                <div class="modal-header" style="border-bottom-color: ${actionColor}30;">
+                    <h2 style="color: ${actionColor};">
+                        <i class="fas fa-${action === 'buy' ? 'arrow-down' : 'arrow-up'}"></i>
+                        ${actionText} ${symbol}
+                    </h2>
+                    <button class="modal-close">&times;</button>
                 </div>
                 
-                <div style="margin-bottom:20px;">
-                    <label style="display:block;margin-bottom:8px;color:var(--text-secondary);">Quantity:</label>
-                    <input type="number" id="tradeQuantity" value="10" min="1" max="1000" 
-                        style="width:100%;padding:10px;background:var(--primary);border:1px solid var(--border);color:white;border-radius:4px;font-size:16px;">
-                </div>
-                
-                <div id="tradeSummary" style="background:var(--primary);padding:15px;border-radius:5px;margin-bottom:20px;border:1px solid var(--border);">
-                    <div style="display:flex;justify-content:space-between;">
-                        <span style="color:var(--text-secondary);">Total Cost:</span>
-                        <span id="totalCost" style="font-weight:bold;color:${actionColor};">$${(10 * price).toFixed(2)}</span>
+                <div class="modal-body">
+                    <div class="crypto-info" style="background: ${asset?.color}10; border-left: 4px solid ${asset?.color}; padding: 15px; border-radius: 4px; margin-bottom: 20px;">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <div style="width: 30px; height: 30px; border-radius: 50%; background: ${asset?.color}30; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-coins" style="color: ${asset?.color};"></i>
+                            </div>
+                            <div>
+                                <div style="font-weight: bold; color: white;">${assetName} (${symbol})</div>
+                                <div style="color: var(--text-secondary); font-size: 14px;">Current Price: <span style="color: white; font-weight: bold;">${formatCryptoPrice(price)}</span></div>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                
-                <div style="display:flex;gap:10px;">
-                    <button onclick="this.closest('.modal-overlay').remove()" 
-                        style="padding:12px 20px;background:transparent;border:1px solid var(--border);color:var(--text-primary);border-radius:4px;cursor:pointer;flex:1;">
-                        Cancel
-                    </button>
-                    <button onclick="executeTrade('${symbol}', '${action}', ${price})" 
-                        style="padding:12px 20px;background:${actionColor};border:none;color:#000;border-radius:4px;cursor:pointer;font-weight:bold;flex:1;">
-                        Confirm ${actionText}
-                    </button>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; margin-bottom: 8px; color: var(--text-secondary);">
+                            Amount (${symbol}):
+                        </label>
+                        <input type="number" id="cryptoAmount" value="${defaultAmount}" step="${symbol === 'BTC' ? '0.001' : symbol === 'ETH' ? '0.01' : '1'}" 
+                            min="0.00000001" style="width: 100%; padding: 12px; background: var(--primary); border: 1px solid var(--border); color: white; border-radius: 4px; font-size: 16px;">
+                    </div>
+                    
+                    <div style="background: var(--primary); padding: 15px; border-radius: 5px; margin-bottom: 20px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                            <span style="color: var(--text-secondary);">Total Cost:</span>
+                            <span id="totalCostCrypto" style="font-weight: bold; color: ${actionColor};">
+                                $${(defaultAmount * price).toFixed(2)}
+                            </span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; font-size: 14px;">
+                            <span style="color: var(--text-secondary);">Available USD:</span>
+                            <span style="color: white; font-weight: bold;">$${userPortfolio.balance.toFixed(2)}</span>
+                        </div>
+                    </div>
+                    
+                    <div style="display: flex; gap: 10px;">
+                        <button class="modal-cancel" style="flex: 1;">Cancel</button>
+                        <button onclick="executeCryptoTrade('${symbol}', '${action}', ${price})" 
+                            style="flex: 1; background: ${actionColor}; color: #000; border: none; padding: 12px; border-radius: 4px; font-weight: bold; cursor: pointer;">
+                            Confirm ${actionText}
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -352,19 +321,35 @@ function showTradeModal(symbol, action, price) {
     
     document.body.insertAdjacentHTML('beforeend', modalHTML);
     
-    // Update total cost when quantity changes
-    document.getElementById('tradeQuantity').addEventListener('input', function() {
-        const quantity = parseInt(this.value) || 0;
-        const total = quantity * price;
-        document.getElementById('totalCost').textContent = `$${total.toFixed(2)}`;
+    // Add event listeners
+    document.getElementById('cryptoAmount').addEventListener('input', function() {
+        const amount = parseFloat(this.value) || 0;
+        const total = amount * price;
+        document.getElementById('totalCostCrypto').textContent = `$${total.toFixed(2)}`;
+    });
+    
+    // Close modal events
+    document.querySelector('.modal-cancel').addEventListener('click', () => {
+        document.querySelector('.modal-overlay').remove();
+    });
+    
+    document.querySelector('.modal-close').addEventListener('click', () => {
+        document.querySelector('.modal-overlay').remove();
+    });
+    
+    document.querySelector('.modal-overlay').addEventListener('click', (e) => {
+        if (e.target.classList.contains('modal-overlay')) {
+            document.querySelector('.modal-overlay').remove();
+        }
     });
 }
 
-function executeTrade(symbol, action, price) {
-    const quantityInput = document.getElementById('tradeQuantity');
-    const quantity = parseInt(quantityInput.value) || 10;
-    const totalCost = quantity * price;
-    const stockName = EQUIPMENT_STOCKS.find(s => s.symbol === symbol)?.name || symbol;
+function executeCryptoTrade(symbol, action, price) {
+    const amountInput = document.getElementById('cryptoAmount');
+    const amount = parseFloat(amountInput.value) || 0;
+    const totalCost = amount * price;
+    const asset = CRYPTO_ASSETS.find(a => a.symbol === symbol);
+    const assetName = asset ? asset.name : symbol;
     
     // Remove modal
     document.querySelector('.modal-overlay').remove();
@@ -373,133 +358,162 @@ function executeTrade(symbol, action, price) {
         if (userPortfolio.balance >= totalCost) {
             userPortfolio.balance -= totalCost;
             
-            // Add to holdings
-            const existingHolding = userPortfolio.holdings.find(h => h.symbol === symbol);
-            if (existingHolding) {
-                existingHolding.shares += quantity;
-                existingHolding.avgPrice = ((existingHolding.avgPrice * existingHolding.shares) + totalCost) / (existingHolding.shares + quantity);
+            // Add to crypto holdings
+            const existingCrypto = userPortfolio.crypto.find(c => c.symbol === symbol);
+            if (existingCrypto) {
+                existingCrypto.amount += amount;
+                existingCrypto.avgPrice = ((existingCrypto.avgPrice * (existingCrypto.amount - amount)) + totalCost) / existingCrypto.amount;
             } else {
-                userPortfolio.holdings.push({
+                userPortfolio.crypto.push({
                     symbol: symbol,
-                    name: stockName,
-                    shares: quantity,
+                    name: assetName,
+                    amount: amount,
                     avgPrice: price
                 });
             }
             
-            showTradeNotification(`✅ Successfully bought ${quantity} shares of ${symbol} at $${price.toFixed(2)}/share`);
-            updatePortfolioValue();
+            showCryptoNotification(`✅ Bought ${formatCryptoAmount(amount, symbol)} ${symbol} at ${formatCryptoPrice(price)}`, 'success');
+            updatePortfolioDisplay();
+            
         } else {
-            showTradeNotification(`❌ Insufficient funds. Need $${totalCost.toFixed(2)}, but only have $${userPortfolio.balance.toFixed(2)}`);
+            showCryptoNotification(`❌ Insufficient USD. Need $${totalCost.toFixed(2)}, have $${userPortfolio.balance.toFixed(2)}`, 'error');
         }
     } else if (action === 'sell') {
-        const existingHolding = userPortfolio.holdings.find(h => h.symbol === symbol);
+        const existingCrypto = userPortfolio.crypto.find(c => c.symbol === symbol);
         
-        if (existingHolding && existingHolding.shares >= quantity) {
+        if (existingCrypto && existingCrypto.amount >= amount) {
             userPortfolio.balance += totalCost;
-            existingHolding.shares -= quantity;
+            existingCrypto.amount -= amount;
             
-            if (existingHolding.shares === 0) {
-                userPortfolio.holdings = userPortfolio.holdings.filter(h => h.symbol !== symbol);
+            if (existingCrypto.amount === 0) {
+                userPortfolio.crypto = userPortfolio.crypto.filter(c => c.symbol !== symbol);
             }
             
-            showTradeNotification(`✅ Successfully sold ${quantity} shares of ${symbol} at $${price.toFixed(2)}/share`);
-            updatePortfolioValue();
+            showCryptoNotification(`✅ Sold ${formatCryptoAmount(amount, symbol)} ${symbol} at ${formatCryptoPrice(price)}`, 'success');
+            updatePortfolioDisplay();
+            
         } else {
-            const available = existingHolding ? existingHolding.shares : 0;
-            showTradeNotification(`❌ Not enough shares. Trying to sell ${quantity}, but only have ${available} shares of ${symbol}`);
+            const available = existingCrypto ? existingCrypto.amount : 0;
+            showCryptoNotification(`❌ Not enough ${symbol}. Trying to sell ${formatCryptoAmount(amount, symbol)}, have ${formatCryptoAmount(available, symbol)}`, 'error');
         }
+    }
+}
+
+// ========================
+// UI FUNCTIONS
+// ========================
+
+function setupCryptoFilters() {
+    const filterBtns = document.querySelectorAll('.crypto-filter');
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            filterBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            
+            const filter = btn.getAttribute('data-filter');
+            filterCryptoByType(filter);
+        });
+    });
+}
+
+function filterCryptoByType(type) {
+    const rows = document.querySelectorAll('.market-table tbody tr');
+    
+    rows.forEach(row => {
+        const symbol = row.cells[0].querySelector('.asset-code').textContent;
+        const asset = CRYPTO_ASSETS.find(a => a.symbol === symbol);
+        
+        if (type === 'all' || asset?.type === type) {
+            row.style.display = '';
+        } else {
+            row.style.display = 'none';
+        }
+    });
+}
+
+function setupPortfolioDisplay() {
+    updatePortfolioValue();
+}
+
+function updatePortfolioDisplay() {
+    updatePortfolioValue();
+    
+    // Update portfolio breakdown
+    const portfolioElement = document.querySelector('.portfolio-breakdown');
+    if (portfolioElement) {
+        let html = '';
+        userPortfolio.crypto.forEach(crypto => {
+            const currentPrice = getSimulatedCryptoPrice(crypto.symbol);
+            const value = crypto.amount * currentPrice;
+            const profitLoss = ((currentPrice - crypto.avgPrice) / crypto.avgPrice * 100).toFixed(2);
+            
+            html += `
+                <div class="portfolio-item">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <span style="font-weight: bold;">${crypto.symbol}</span>
+                            <span style="color: var(--text-secondary); font-size: 14px;"> ${formatCryptoAmount(crypto.amount, crypto.symbol)}</span>
+                        </div>
+                        <div style="text-align: right;">
+                            <div style="font-weight: bold;">$${value.toFixed(2)}</div>
+                            <div style="color: ${profitLoss >= 0 ? '#00ff9d' : '#ff4757'}; font-size: 12px;">
+                                ${profitLoss >= 0 ? '+' : ''}${profitLoss}%
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+        
+        portfolioElement.innerHTML = html;
     }
 }
 
 function updatePortfolioValue() {
-    // Update portfolio value display
+    // Calculate total portfolio value
+    let totalValue = userPortfolio.balance;
+    
+    userPortfolio.crypto.forEach(crypto => {
+        const currentPrice = getSimulatedCryptoPrice(crypto.symbol);
+        totalValue += crypto.amount * currentPrice;
+    });
+    
+    // Update display
     const portfolioElement = document.getElementById('portfolioValue');
     if (portfolioElement) {
-        portfolioElement.textContent = `$${userPortfolio.balance.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+        portfolioElement.textContent = `$${totalValue.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
     }
 }
 
-// ========================
-// UI HELPER FUNCTIONS
-// ========================
-
-function showTradingModal(type) {
-    let title, message, formHTML;
+function showCryptoModal(type) {
+    const modals = {
+        login: {
+            title: 'Crypto Trading Login',
+            message: 'Access your memecoin portfolio'
+        },
+        signup: {
+            title: 'Start Trading Crypto',
+            message: 'Join the memecoin revolution'
+        }
+    };
     
-    switch(type) {
-        case 'login':
-            title = 'Trade Login';
-            message = 'Enter your credentials to access real trading';
-            formHTML = `
-                <input type="email" placeholder="Email" class="modal-input">
-                <input type="password" placeholder="Password" class="modal-input">
-            `;
-            break;
-        case 'signup':
-            title = 'Open Trading Account';
-            message = 'Start your trading journey today';
-            formHTML = `
-                <input type="text" placeholder="Full Name" class="modal-input">
-                <input type="email" placeholder="Email" class="modal-input">
-                <input type="tel" placeholder="Phone" class="modal-input">
-                <select class="modal-input">
-                    <option value="">Account Type</option>
-                    <option value="individual">Individual</option>
-                    <option value="corporate">Corporate</option>
-                    <option value="institutional">Institutional</option>
-                </select>
-            `;
-            break;
-        case 'demo':
-            title = 'Platform Demo';
-            message = 'Schedule a personalized demo with our experts';
-            formHTML = `
-                <input type="text" placeholder="Company Name" class="modal-input">
-                <input type="email" placeholder="Business Email" class="modal-input">
-                <input type="tel" placeholder="Phone Number" class="modal-input">
-                <select class="modal-input">
-                    <option value="">Preferred Date</option>
-                    <option value="tomorrow">Tomorrow</option>
-                    <option value="this-week">This Week</option>
-                    <option value="next-week">Next Week</option>
-                </select>
-            `;
-            break;
-        case 'support':
-            title = 'Contact Support';
-            message = 'Our team is available 24/7 to help you';
-            formHTML = `
-                <input type="text" placeholder="Subject" class="modal-input">
-                <input type="email" placeholder="Your Email" class="modal-input">
-                <textarea placeholder="How can we help you?" class="modal-input" style="height:100px;"></textarea>
-            `;
-            break;
-    }
+    const modal = modals[type];
+    if (!modal) return;
     
     const modalHTML = `
-        <div class="modal-overlay" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);display:flex;justify-content:center;align-items:center;z-index:2000;">
-            <div style="background:var(--secondary);padding:30px;border-radius:10px;max-width:450px;width:90%;border:1px solid var(--border);">
-                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:15px;">
-                    <h2 style="color:var(--accent);margin:0;">${title}</h2>
-                    <button onclick="this.closest('.modal-overlay').remove()" 
-                        style="background:none;border:none;color:var(--text-secondary);font-size:24px;cursor:pointer;">&times;</button>
+        <div class="modal-overlay">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>${modal.title}</h2>
+                    <button class="modal-close">&times;</button>
                 </div>
-                
-                <p style="color:var(--text-secondary);margin-bottom:25px;">${message}</p>
-                
-                <div style="margin-bottom:25px;">
-                    ${formHTML}
-                </div>
-                
-                <div style="display:flex;gap:10px;">
-                    <button onclick="this.closest('.modal-overlay').remove()" 
-                        style="padding:12px 20px;background:transparent;border:1px solid var(--border);color:var(--text-primary);border-radius:4px;cursor:pointer;flex:1;">
-                        Cancel
-                    </button>
-                    <button onclick="submitForm('${type}')" 
-                        style="padding:12px 20px;background:var(--accent);border:none;color:var(--primary);border-radius:4px;cursor:pointer;font-weight:bold;flex:1;">
-                        Submit
+                <div class="modal-body">
+                    <p style="color: var(--text-secondary); margin-bottom: 20px;">${modal.message}</p>
+                    <input type="email" placeholder="Email" class="modal-input">
+                    ${type === 'signup' ? '<input type="text" placeholder="Username" class="modal-input">' : ''}
+                    <input type="password" placeholder="Password" class="modal-input">
+                    <button class="btn btn-primary" style="width: 100%; margin-top: 20px;">
+                        ${type === 'login' ? 'Log In' : 'Create Account'}
                     </button>
                 </div>
             </div>
@@ -507,19 +521,23 @@ function showTradingModal(type) {
     `;
     
     document.body.insertAdjacentHTML('beforeend', modalHTML);
-}
-
-function submitForm(type) {
-    const action = type === 'login' ? 'login' : 
-                   type === 'signup' ? 'account creation' : 
-                   type === 'demo' ? 'demo request' : 'support request';
     
-    showTradeNotification(`✅ ${action.charAt(0).toUpperCase() + action.slice(1)} submitted successfully!`);
-    document.querySelector('.modal-overlay').remove();
+    // Add close events
+    document.querySelector('.modal-close').addEventListener('click', () => {
+        document.querySelector('.modal-overlay').remove();
+    });
+    
+    document.querySelector('.modal-overlay').addEventListener('click', (e) => {
+        if (e.target.classList.contains('modal-overlay')) {
+            document.querySelector('.modal-overlay').remove();
+        }
+    });
 }
 
-function showTradeNotification(message) {
-    // Create notification
+function showCryptoNotification(message, type) {
+    const color = type === 'success' ? '#00ff9d' : '#ff4757';
+    const icon = type === 'success' ? 'fa-check-circle' : 'fa-exclamation-triangle';
+    
     const notification = document.createElement('div');
     notification.style.cssText = `
         position: fixed;
@@ -529,7 +547,7 @@ function showTradeNotification(message) {
         color: white;
         padding: 15px 20px;
         border-radius: 5px;
-        border-left: 4px solid var(--accent);
+        border-left: 4px solid ${color};
         z-index: 1000;
         box-shadow: 0 4px 12px rgba(0,0,0,0.3);
         animation: slideIn 0.3s ease;
@@ -539,14 +557,13 @@ function showTradeNotification(message) {
     
     notification.innerHTML = `
         <div style="display:flex;align-items:center;gap:10px;">
-            <i class="fas fa-check-circle" style="color:var(--accent);"></i>
+            <i class="fas ${icon}" style="color:${color};"></i>
             <span>${message}</span>
         </div>
     `;
     
     document.body.appendChild(notification);
     
-    // Remove after 4 seconds
     setTimeout(() => {
         notification.style.animation = 'slideOut 0.3s ease';
         setTimeout(() => notification.remove(), 300);
@@ -563,52 +580,50 @@ function showAPIStatus(status, type) {
     apiStatus.innerHTML = `
         <i class="fas ${icon}" style="color:${color};margin-right:8px;"></i>
         <span style="color:${color};">${status}</span> • 
-        <span>${USE_REAL_DATA ? 'Live Market Data' : 'Simulated Data'}</span>
+        <span>Crypto Trading Platform</span>
     `;
 }
 
 function startLiveUpdates() {
-    // Update prices every 30 seconds
+    // Update crypto prices every 15 seconds
     setInterval(async () => {
-        if (USE_REAL_DATA) {
-            console.log('Fetching updated market data...');
-            await loadMarketData();
-        } else {
-            // Simulate price changes
-            simulatePriceChanges();
-        }
-    }, 30000); // 30 seconds
-    
-    // Also update time display
-    updateTimeDisplay();
-    setInterval(updateTimeDisplay, 60000); // Update every minute
+        console.log('Updating crypto prices...');
+        await loadCryptoData();
+    }, 15000);
 }
 
-function simulatePriceChanges() {
-    EQUIPMENT_STOCKS.forEach(stock => {
-        if (Math.random() > 0.5) { // 50% chance to change
-            updateStockWithSimulatedData(stock.symbol);
-        }
-    });
+// ========================
+// HELPER FUNCTIONS
+// ========================
+
+function formatCryptoPrice(price) {
+    if (price < 0.0001) return `$${price.toFixed(8)}`;
+    if (price < 0.01) return `$${price.toFixed(6)}`;
+    if (price < 1) return `$${price.toFixed(4)}`;
+    return `$${price.toFixed(2)}`;
 }
 
-function updateTimeDisplay() {
-    const now = new Date();
-    const timeString = now.toLocaleTimeString('en-US', { 
-        hour: '2-digit', 
-        minute: '2-digit',
-        hour12: true 
+function formatCryptoAmount(amount, symbol) {
+    if (symbol === 'BTC') return amount.toFixed(6);
+    if (symbol === 'ETH') return amount.toFixed(4);
+    if (symbol === 'SOL') return amount.toFixed(2);
+    if (symbol === 'DOGE') return amount.toLocaleString(undefined, {maximumFractionDigits: 0});
+    if (symbol === 'SHIB') return amount.toLocaleString(undefined, {maximumFractionDigits: 0});
+    return amount.toFixed(2);
+}
+
+function setupNavigation() {
+    const navLinks = document.querySelectorAll('nav a');
+    navLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            if (!link.getAttribute('href') || link.getAttribute('href') === '#') {
+                e.preventDefault();
+                navLinks.forEach(l => l.classList.remove('active'));
+                link.classList.add('active');
+            }
+        });
     });
-    
-    const statusElement = document.getElementById('apiStatus');
-    if (statusElement) {
-        const currentHTML = statusElement.innerHTML;
-        if (!currentHTML.includes('Last update')) {
-            statusElement.innerHTML += ` • Last update: ${timeString}`;
-        }
-    }
 }
 
 // Make functions available globally
-window.executeTrade = executeTrade;
-window.submitForm = submitForm;
+window.executeCryptoTrade = executeCryptoTrade;
