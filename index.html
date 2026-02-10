@@ -3,49 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Obsidian Edge | Premium Equipment Trading</title>
+    <title>Obsidian Edge | Crypto Trading Platform</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💎</text></svg>">
-    <style>
-        /* Logo fallback styling */
-        .logo-img {
-            height: 42px;
-            width: auto;
-            border-radius: 6px;
-            object-fit: contain;
-        }
-        
-        /* Animation for trade notifications */
-        @keyframes slideIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-        
-        @keyframes slideOut {
-            from { transform: translateX(0); opacity: 1; }
-            to { transform: translateX(100%); opacity: 0; }
-        }
-    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>●</text></svg>">
 </head>
 <body>
     <!-- Header -->
     <header>
         <div class="container header-container">
             <div class="logo">
-                <!-- TEACHER'S LOGO GOES HERE -->
-                <img src="logo.png" alt="Obsidian Edge Logo" class="logo-img" onerror="this.style.display='none'; document.querySelector('.logo-fallback').style.display='block';">
-                <div class="logo-fallback" style="display: none;">
-                    <div class="logo-icon">
-                        <i class="fas fa-gem"></i>
-                    </div>
-                </div>
+                <img src="logo.png" alt="Obsidian Edge Logo" class="logo-img" onerror="this.style.display='none';">
                 <div>
-                    <div class="logo-text">OBSIDIAN EDGE</div>
-                    <div class="logo-subtext">EQUIPMENT TRADING</div>
+                    <div class="logo-text"></div>
+                    <div class="logo-subtext">CRYPTO TRADING</div>
                 </div>
             </div>
             
@@ -53,8 +28,8 @@
                 <ul>
                     <li><a href="#" class="active">Platform</a></li>
                     <li><a href="#markets">Markets</a></li>
-                    <li><a href="#solutions">Solutions</a></li>
-                    <li><a href="#research">Research</a></li>
+                    <li><a href="#performance">Performance</a></li>
+                    <li><a href="#institutions">Institutions</a></li>
                     <li><a href="#company">Company</a></li>
                 </ul>
             </nav>
@@ -69,30 +44,33 @@
     <!-- Hero Section -->
     <section class="hero">
         <div class="container">
-            <h1>Advanced Trading Platform for High-Value Equipment & Components</h1>
-            <p>Access institutional-grade trading tools, real-time market data, and exclusive liquidity for industrial equipment, aerospace components, and specialized machinery.</p>
+            <h1>Trade With The Edge Others Miss</h1>
+            <p class="hero-subtext">
+                Obsidian Edge is a crypto focused trading platform built for precision, 
+                discipline, and market advantage. No noise. No hype. Just calculated execution.
+            </p>
             
             <div class="hero-btns">
-                <button class="btn btn-primary" id="openAccountBtn">Open Free Account</button>
-                <button class="btn btn-login" id="demoBtn">Request Demo</button>
+                <button class="btn btn-primary" id="enterMarketBtn">Enter The Market</button>
+                <button class="btn btn-secondary" id="viewPerformanceBtn">View Performance</button>
             </div>
             
             <div class="stats">
                 <div class="stat-item">
-                    <div class="stat-value">$4.8B+</div>
-                    <div class="stat-label">Monthly Volume</div>
+                    <div class="stat-value">$2.4B+</div>
+                    <div class="stat-label">Daily Volume</div>
                 </div>
                 <div class="stat-item">
                     <div class="stat-value">24/7</div>
-                    <div class="stat-label">Trading Access</div>
+                    <div class="stat-label">Trading</div>
                 </div>
                 <div class="stat-item">
                     <div class="stat-value">150+</div>
-                    <div class="stat-label">Markets</div>
+                    <div class="stat-label">Cryptos</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-value" id="portfolioValue">$100,000.00</div>
-                    <div class="stat-label">Demo Portfolio</div>
+                    <div class="stat-value" id="portfolioValue">$25,480.50</div>
+                    <div class="stat-label">Avg. Portfolio</div>
                 </div>
             </div>
         </div>
@@ -101,15 +79,23 @@
     <!-- Features Section -->
     <section class="features">
         <div class="container">
-            <h2 class="section-title">Platform Features</h2>
+            <h2 class="section-title">Platform Capabilities</h2>
             
             <div class="features-grid">
                 <div class="feature-card">
                     <div class="feature-icon">
-                        <i class="fas fa-bolt"></i>
+                        <i class="fas fa-chess-knight"></i>
                     </div>
-                    <h3 class="feature-title">Advanced Execution</h3>
-                    <p class="feature-desc">High-speed order execution with institutional-grade infrastructure and minimal latency for equipment trading.</p>
+                    <h3 class="feature-title">Strategic Execution</h3>
+                    <p class="feature-desc">Advanced order types and execution algorithms designed for crypto market dynamics and volatility.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3 class="feature-title">Institutional Security</h3>
+                    <p class="feature-desc">Multi-signature custody, cold storage solutions, and enterprise-grade security protocols.</p>
                 </div>
                 
                 <div class="feature-card">
@@ -117,15 +103,7 @@
                         <i class="fas fa-chart-network"></i>
                     </div>
                     <h3 class="feature-title">Deep Liquidity</h3>
-                    <p class="feature-desc">Access to exclusive liquidity pools and counterparties across industrial and specialized equipment markets.</p>
-                </div>
-                
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-shield-alt"></i>
-                    </div>
-                    <h3 class="feature-title">Secure Custody</h3>
-                    <p class="feature-desc">Industry-leading security protocols and insured custody solutions for high-value equipment assets.</p>
+                    <p class="feature-desc">Access to aggregated liquidity across major exchanges and OTC desks for optimal fills.</p>
                 </div>
             </div>
         </div>
@@ -134,149 +112,235 @@
     <!-- Market Data -->
     <section class="market" id="markets">
         <div class="container">
-            <h2 class="section-title">Live Market Data</h2>
+            <h2 class="section-title">Live Crypto Markets</h2>
             
             <div class="market-tabs">
-                <button class="tab-btn active" data-market="industrial">Industrial Equipment</button>
-                <button class="tab-btn" data-market="aerospace">Aerospace Components</button>
-                <button class="tab-btn" data-market="energy">Energy Systems</button>
-                <button class="tab-btn" data-market="machinery">Specialized Machinery</button>
+                <button class="tab-btn active" data-filter="all">All Assets</button>
+                <button class="tab-btn" data-filter="memecoin">Memecoins</button>
+                <button class="tab-btn" data-filter="altcoin">Altcoins</button>
+                <button class="tab-btn" data-filter="bluechip">Blue Chip</button>
+            </div>
+            
+            <div class="crypto-filters">
+                <button class="crypto-filter active" data-filter="all">All</button>
+                <button class="crypto-filter" data-filter="memecoin">Memecoins</button>
+                <button class="crypto-filter" data-filter="altcoin">Altcoins</button>
+                <button class="crypto-filter" data-filter="bluechip">Blue Chip</button>
+            </div>
+            
+            <div class="risk-warning">
+                HIGH RISK ASSETS • CRYPTOCURRENCY TRADING INVOLVES SIGNIFICANT RISK
             </div>
             
             <div class="table-container">
                 <table class="market-table">
                     <thead>
                         <tr>
-                            <th>Asset</th>
-                            <th>Last Price</th>
+                            <th>Crypto</th>
+                            <th>Price</th>
                             <th>24h Change</th>
                             <th>24h Volume</th>
                             <th>Market Cap</th>
-                            <th>Action</th>
+                            <th>Trade</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- Row 1: Caterpillar -->
-                        <tr>
+                        <!-- Bitcoin -->
+                        <tr data-type="bluechip">
                             <td>
                                 <div class="asset">
-                                    <div class="asset-icon">
-                                        <i class="fas fa-industry"></i>
+                                    <div class="asset-icon" style="background: rgba(247, 147, 26, 0.1);">
+                                        <i class="fab fa-bitcoin" style="color: #F7931A;"></i>
                                     </div>
                                     <div>
-                                        <div class="asset-name">Caterpillar Inc.</div>
-                                        <div class="asset-code">CAT</div>
+                                        <div class="asset-name">Bitcoin</div>
+                                        <div class="asset-code">BTC</div>
                                     </div>
                                 </div>
                             </td>
-                            <td class="price">$245.80</td>
+                            <td class="price">$43,250.80</td>
                             <td class="change price-up">+2.34%</td>
-                            <td class="volume">$42.5M</td>
-                            <td class="market-cap">$132.4B</td>
+                            <td class="volume">$42.5B</td>
+                            <td class="market-cap">$845.2B</td>
                             <td class="action-cell">
                                 <div class="trade-buttons">
-                                    <button class="trade-btn trade-buy" data-symbol="CAT" data-price="245.80">BUY</button>
-                                    <button class="trade-btn trade-sell" data-symbol="CAT" data-price="245.80">SELL</button>
+                                    <button class="trade-btn trade-buy" data-symbol="BTC" data-price="43250.80">BUY</button>
+                                    <button class="trade-btn trade-sell" data-symbol="BTC" data-price="43250.80">SELL</button>
                                 </div>
                             </td>
                         </tr>
                         
-                        <!-- Row 2: Deere & Company -->
-                        <tr>
+                        <!-- Ethereum -->
+                        <tr data-type="bluechip">
                             <td>
                                 <div class="asset">
-                                    <div class="asset-icon">
-                                        <i class="fas fa-tractor"></i>
+                                    <div class="asset-icon" style="background: rgba(98, 126, 234, 0.1);">
+                                        <i class="fab fa-ethereum" style="color: #627EEA;"></i>
                                     </div>
                                     <div>
-                                        <div class="asset-name">Deere & Company</div>
-                                        <div class="asset-code">DE</div>
+                                        <div class="asset-name">Ethereum</div>
+                                        <div class="asset-code">ETH</div>
                                     </div>
                                 </div>
                             </td>
-                            <td class="price">$387.50</td>
+                            <td class="price">$2,350.50</td>
                             <td class="change price-up">+1.25%</td>
-                            <td class="volume">$38.2M</td>
-                            <td class="market-cap">$108.9B</td>
+                            <td class="volume">$38.2B</td>
+                            <td class="market-cap">$282.1B</td>
                             <td class="action-cell">
                                 <div class="trade-buttons">
-                                    <button class="trade-btn trade-buy" data-symbol="DE" data-price="387.50">BUY</button>
-                                    <button class="trade-btn trade-sell" data-symbol="DE" data-price="387.50">SELL</button>
+                                    <button class="trade-btn trade-buy" data-symbol="ETH" data-price="2350.50">BUY</button>
+                                    <button class="trade-btn trade-sell" data-symbol="ETH" data-price="2350.50">SELL</button>
                                 </div>
                             </td>
                         </tr>
                         
-                        <!-- Row 3: General Electric -->
-                        <tr>
+                        <!-- Solana -->
+                        <tr data-type="altcoin">
                             <td>
                                 <div class="asset">
-                                    <div class="asset-icon">
-                                        <i class="fas fa-cogs"></i>
+                                    <div class="asset-icon" style="background: rgba(0, 255, 163, 0.1);">
+                                        <i class="fas fa-bolt" style="color: #00FFA3;"></i>
                                     </div>
                                     <div>
-                                        <div class="asset-name">General Electric</div>
-                                        <div class="asset-code">GE</div>
+                                        <div class="asset-name">Solana</div>
+                                        <div class="asset-code">SOL</div>
                                     </div>
                                 </div>
                             </td>
-                            <td class="price">$154.90</td>
+                            <td class="price">$108.90</td>
                             <td class="change price-down">-0.75%</td>
-                            <td class="volume">$29.8M</td>
-                            <td class="market-cap">$168.5B</td>
+                            <td class="volume">$3.8B</td>
+                            <td class="market-cap">$47.2B</td>
                             <td class="action-cell">
                                 <div class="trade-buttons">
-                                    <button class="trade-btn trade-buy" data-symbol="GE" data-price="154.90">BUY</button>
-                                    <button class="trade-btn trade-sell" data-symbol="GE" data-price="154.90">SELL</button>
+                                    <button class="trade-btn trade-buy" data-symbol="SOL" data-price="108.90">BUY</button>
+                                    <button class="trade-btn trade-sell" data-symbol="SOL" data-price="108.90">SELL</button>
                                 </div>
                             </td>
                         </tr>
                         
-                        <!-- Row 4: Honeywell -->
-                        <tr>
+                        <!-- Dogecoin -->
+                        <tr data-type="memecoin">
                             <td>
                                 <div class="asset">
-                                    <div class="asset-icon">
-                                        <i class="fas fa-plane"></i>
+                                    <div class="asset-icon" style="background: rgba(194, 166, 51, 0.1);">
+                                        <i class="fab fa-reddit-alien" style="color: #C2A633;"></i>
                                     </div>
                                     <div>
-                                        <div class="asset-name">Honeywell International</div>
-                                        <div class="asset-code">HON</div>
+                                        <div class="asset-name">Dogecoin</div>
+                                        <div class="asset-code">DOGE</div>
                                     </div>
                                 </div>
                             </td>
-                            <td class="price">$209.40</td>
+                            <td class="price">$0.0814</td>
                             <td class="change price-up">+3.42%</td>
-                            <td class="volume">$51.3M</td>
-                            <td class="market-cap">$137.2B</td>
+                            <td class="volume">$1.3B</td>
+                            <td class="market-cap">$11.6B</td>
                             <td class="action-cell">
                                 <div class="trade-buttons">
-                                    <button class="trade-btn trade-buy" data-symbol="HON" data-price="209.40">BUY</button>
-                                    <button class="trade-btn trade-sell" data-symbol="HON" data-price="209.40">SELL</button>
+                                    <button class="trade-btn trade-buy" data-symbol="DOGE" data-price="0.0814">BUY</button>
+                                    <button class="trade-btn trade-sell" data-symbol="DOGE" data-price="0.0814">SELL</button>
                                 </div>
                             </td>
                         </tr>
                         
-                        <!-- Row 5: Raytheon Technologies -->
-                        <tr>
+                        <!-- Shiba Inu -->
+                        <tr data-type="memecoin">
                             <td>
                                 <div class="asset">
-                                    <div class="asset-icon">
-                                        <i class="fas fa-wind"></i>
+                                    <div class="asset-icon" style="background: rgba(255, 59, 139, 0.1);">
+                                        <i class="fas fa-dog" style="color: #FF3B8B;"></i>
                                     </div>
                                     <div>
-                                        <div class="asset-name">Raytheon Technologies</div>
-                                        <div class="asset-code">RTX</div>
+                                        <div class="asset-name">Shiba Inu</div>
+                                        <div class="asset-code">SHIB</div>
                                     </div>
                                 </div>
                             </td>
-                            <td class="price">$97.80</td>
+                            <td class="price">$0.00000812</td>
                             <td class="change price-up">+0.89%</td>
-                            <td class="volume">$22.4M</td>
-                            <td class="market-cap">$141.0B</td>
+                            <td class="volume">$224.4M</td>
+                            <td class="market-cap">$4.8B</td>
                             <td class="action-cell">
                                 <div class="trade-buttons">
-                                    <button class="trade-btn trade-buy" data-symbol="RTX" data-price="97.80">BUY</button>
-                                    <button class="trade-btn trade-sell" data-symbol="RTX" data-price="97.80">SELL</button>
+                                    <button class="trade-btn trade-buy" data-symbol="SHIB" data-price="0.00000812">BUY</button>
+                                    <button class="trade-btn trade-sell" data-symbol="SHIB" data-price="0.00000812">SELL</button>
+                                </div>
+                            </td>
+                        </tr>
+                        
+                        <!-- Pepe Coin -->
+                        <tr data-type="memecoin">
+                            <td>
+                                <div class="asset">
+                                    <div class="asset-icon" style="background: rgba(0, 255, 0, 0.1);">
+                                        <i class="fas fa-frog" style="color: #00FF00;"></i>
+                                    </div>
+                                    <div>
+                                        <div class="asset-name">Pepe Coin</div>
+                                        <div class="asset-code">PEPE</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="price">$0.00000125</td>
+                            <td class="change price-up">+15.42%</td>
+                            <td class="volume">$185.3M</td>
+                            <td class="market-cap">$525M</td>
+                            <td class="action-cell">
+                                <div class="trade-buttons">
+                                    <button class="trade-btn trade-buy" data-symbol="PEPE" data-price="0.00000125">BUY</button>
+                                    <button class="trade-btn trade-sell" data-symbol="PEPE" data-price="0.00000125">SELL</button>
+                                </div>
+                            </td>
+                        </tr>
+                        
+                        <!-- Bonk -->
+                        <tr data-type="memecoin">
+                            <td>
+                                <div class="asset">
+                                    <div class="asset-icon" style="background: rgba(255, 107, 0, 0.1);">
+                                        <i class="fas fa-bone" style="color: #FF6B00;"></i>
+                                    </div>
+                                    <div>
+                                        <div class="asset-name">Bonk</div>
+                                        <div class="asset-code">BONK</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="price">$0.0000225</td>
+                            <td class="change price-down">-2.75%</td>
+                            <td class="volume">$98.4M</td>
+                            <td class="market-cap">$1.4B</td>
+                            <td class="action-cell">
+                                <div class="trade-buttons">
+                                    <button class="trade-btn trade-buy" data-symbol="BONK" data-price="0.0000225">BUY</button>
+                                    <button class="trade-btn trade-sell" data-symbol="BONK" data-price="0.0000225">SELL</button>
+                                </div>
+                            </td>
+                        </tr>
+                        
+                        <!-- dogwifhat -->
+                        <tr data-type="memecoin">
+                            <td>
+                                <div class="asset">
+                                    <div class="asset-icon" style="background: rgba(255, 182, 193, 0.1);">
+                                        <i class="fas fa-hat-wizard" style="color: #FFB6C1;"></i>
+                                    </div>
+                                    <div>
+                                        <div class="asset-name">dogwifhat</div>
+                                        <div class="asset-code">WIF</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="price">$0.325</td>
+                            <td class="change price-up">+45.20%</td>
+                            <td class="volume">$324.8M</td>
+                            <td class="market-cap">$325M</td>
+                            <td class="action-cell">
+                                <div class="trade-buttons">
+                                    <button class="trade-btn trade-buy" data-symbol="WIF" data-price="0.325">BUY</button>
+                                    <button class="trade-btn trade-sell" data-symbol="WIF" data-price="0.325">SELL</button>
                                 </div>
                             </td>
                         </tr>
@@ -286,42 +350,42 @@
             
             <div class="market-footer">
                 <p class="data-disclaimer">
-                    <i class="fas fa-info-circle"></i> Data updates every 10 seconds. Trading simulation with $100,000 demo account.
+                    Real-time crypto data • Prices update every 10 seconds
                 </p>
             </div>
         </div>
     </section>
 
     <!-- Trading Demo Section -->
-    <section class="demo-section" id="solutions">
+    <section class="demo-section" id="performance">
         <div class="container">
-            <h2 class="section-title">Start Trading Today</h2>
+            <h2 class="section-title">Platform Performance</h2>
             <div class="demo-container">
-                <div class="demo-card">
-                    <div class="demo-icon">
-                        <i class="fas fa-user-plus"></i>
-                    </div>
-                    <h3>Open Account</h3>
-                    <p>Get started with a free demo account. No commitment required.</p>
-                    <button class="btn btn-primary demo-action" data-action="signup">Sign Up Free</button>
-                </div>
-                
                 <div class="demo-card">
                     <div class="demo-icon">
                         <i class="fas fa-chart-line"></i>
                     </div>
-                    <h3>Live Demo</h3>
-                    <p>Schedule a personalized tour with our trading specialists.</p>
-                    <button class="btn btn-primary demo-action" data-action="demo">Book a Demo</button>
+                    <h3>Backtested Returns</h3>
+                    <p>Average annual return of 42.8% across all crypto assets based on 12-month backtesting.</p>
+                    <button class="btn btn-primary view-analytics">View Analytics</button>
                 </div>
                 
                 <div class="demo-card">
                     <div class="demo-icon">
-                        <i class="fas fa-headset"></i>
+                        <i class="fas fa-tachometer-alt"></i>
                     </div>
-                    <h3>Support 24/7</h3>
-                    <p>Get help anytime from our dedicated trading support team.</p>
-                    <button class="btn btn-primary demo-action" data-action="support">Contact Support</button>
+                    <h3>Execution Speed</h3>
+                    <p>Average order execution time of 2.3ms with 99.9% uptime across all trading pairs.</p>
+                    <button class="btn btn-primary view-metrics">View Metrics</button>
+                </div>
+                
+                <div class="demo-card">
+                    <div class="demo-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3>Institutional Clients</h3>
+                    <p>Trusted by 150+ institutional clients managing over $4.2B in combined assets.</p>
+                    <button class="btn btn-primary view-clients">View Clients</button>
                 </div>
             </div>
         </div>
@@ -335,16 +399,17 @@
                     <div class="logo">
                         <img src="logo.png" alt="Obsidian Edge Logo" class="logo-img" style="height: 50px;">
                         <div>
-                            <div class="logo-text">OBSIDIAN EDGE</div>
-                            <div class="logo-subtext">EQUIPMENT TRADING</div>
+                            <div class="logo-text"></div>
+                            <div class="logo-subtext">CRYPTO TRADING</div>
                         </div>
                     </div>
-                    <p style="margin-top: 20px; color: var(--text-secondary);">Institutional-grade trading platform for high-value equipment and industrial assets.</p>
-                    <div class="social-links" style="margin-top: 20px; display: flex; gap: 15px;">
-                        <a href="#" style="color: var(--text-secondary);"><i class="fab fa-twitter"></i></a>
-                        <a href="#" style="color: var(--text-secondary);"><i class="fab fa-linkedin"></i></a>
-                        <a href="#" style="color: var(--text-secondary);"><i class="fab fa-youtube"></i></a>
-                        <a href="#" style="color: var(--text-secondary);"><i class="fab fa-github"></i></a>
+                    <p style="margin-top: 20px; color: var(--muted-gray);">
+                        A crypto focused trading platform built for precision, discipline, and market advantage.
+                    </p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                        <a href="#"><i class="fab fa-github"></i></a>
                     </div>
                 </div>
                 
@@ -362,7 +427,7 @@
                 <div class="footer-col">
                     <h3>Company</h3>
                     <ul>
-                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">About</a></li>
                         <li><a href="#">Careers</a></li>
                         <li><a href="#">Compliance</a></li>
                         <li><a href="#">Security</a></li>
@@ -373,55 +438,32 @@
                 <div class="footer-col">
                     <h3>Resources</h3>
                     <ul>
-                        <li><a href="#">Research & Insights</a></li>
+                        <li><a href="#">Research</a></li>
                         <li><a href="#">Market Analysis</a></li>
                         <li><a href="#">Help Center</a></li>
                         <li><a href="#">System Status</a></li>
-                        <li><a href="#">Legal Documents</a></li>
+                        <li><a href="#">Legal</a></li>
                     </ul>
                 </div>
             </div>
             
             <div class="copyright">
-                &copy; 2023 Obsidian Edge Trading Platform. All rights reserved. | 
-                <span id="currentYear"></span> | 
-                This is a commercial-grade demo for educational purposes.
+                &copy; <span id="currentYear"></span> Obsidian Edge Trading Platform. All rights reserved. | 
+                Cryptocurrency trading involves significant risk.
             </div>
         </div>
     </footer>
 
-    <!-- Trading Modal (Hidden by default) -->
-    <div id="tradingModal" class="modal-overlay" style="display: none;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 id="modalTitle">Trading Platform</h2>
-                <button class="modal-close">&times;</button>
-            </div>
-            <div class="modal-body" id="modalBody">
-                <!-- Content loaded by JavaScript -->
-            </div>
-        </div>
-    </div>
-
     <!-- API Status Indicator -->
     <div class="api-status" id="apiStatus">
-        <i class="fas fa-circle" style="font-size: 8px; margin-right: 8px;"></i>
-        <span id="statusText">Demo Mode</span> • 
-        <span id="dataType">Simulated Data</span>
+        <i class="fas fa-circle"></i>
+        <span id="statusText">Live Data</span>
     </div>
 
     <script src="script.js"></script>
     <script>
         // Set current year in footer
         document.getElementById('currentYear').textContent = new Date().getFullYear();
-        
-        // Simple modal close functionality
-        document.addEventListener('click', function(e) {
-            if (e.target.classList.contains('modal-close') || 
-                e.target.classList.contains('modal-overlay')) {
-                document.getElementById('tradingModal').style.display = 'none';
-            }
-        });
     </script>
 </body>
 </html>
