@@ -10,13 +10,38 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💎</text></svg>">
+    <style>
+        /* Logo fallback styling */
+        .logo-img {
+            height: 42px;
+            width: auto;
+            border-radius: 6px;
+            object-fit: contain;
+        }
+        
+        /* Animation for trade notifications */
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        @keyframes slideOut {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(100%); opacity: 0; }
+        }
+    </style>
 </head>
 <body>
+    <!-- Header -->
     <header>
         <div class="container header-container">
             <div class="logo">
-                <div class="logo-icon">
-                    <i class="fas fa-gem"></i>
+                <!-- TEACHER'S LOGO GOES HERE -->
+                <img src="logo.png" alt="Obsidian Edge Logo" class="logo-img" onerror="this.style.display='none'; document.querySelector('.logo-fallback').style.display='block';">
+                <div class="logo-fallback" style="display: none;">
+                    <div class="logo-icon">
+                        <i class="fas fa-gem"></i>
+                    </div>
                 </div>
                 <div>
                     <div class="logo-text">OBSIDIAN EDGE</div>
@@ -27,28 +52,29 @@
             <nav>
                 <ul>
                     <li><a href="#" class="active">Platform</a></li>
-                    <li><a href="#">Markets</a></li>
-                    <li><a href="#">Solutions</a></li>
-                    <li><a href="#">Research</a></li>
-                    <li><a href="#">Company</a></li>
+                    <li><a href="#markets">Markets</a></li>
+                    <li><a href="#solutions">Solutions</a></li>
+                    <li><a href="#research">Research</a></li>
+                    <li><a href="#company">Company</a></li>
                 </ul>
             </nav>
             
             <div class="header-actions">
-                <button class="btn btn-login">Log In</button>
-                <button class="btn btn-primary">Get Started</button>
+                <button class="btn btn-login" id="loginBtn">Log In</button>
+                <button class="btn btn-primary" id="signupBtn">Get Started</button>
             </div>
         </div>
     </header>
 
+    <!-- Hero Section -->
     <section class="hero">
         <div class="container">
             <h1>Advanced Trading Platform for High-Value Equipment & Components</h1>
             <p>Access institutional-grade trading tools, real-time market data, and exclusive liquidity for industrial equipment, aerospace components, and specialized machinery.</p>
             
             <div class="hero-btns">
-                <button class="btn btn-primary">Open Free Account</button>
-                <button class="btn btn-login">Request Demo</button>
+                <button class="btn btn-primary" id="openAccountBtn">Open Free Account</button>
+                <button class="btn btn-login" id="demoBtn">Request Demo</button>
             </div>
             
             <div class="stats">
@@ -65,13 +91,14 @@
                     <div class="stat-label">Markets</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-value">0.05%</div>
-                    <div class="stat-label">Avg. Fee</div>
+                    <div class="stat-value" id="portfolioValue">$100,000.00</div>
+                    <div class="stat-label">Demo Portfolio</div>
                 </div>
             </div>
         </div>
     </section>
 
+    <!-- Features Section -->
     <section class="features">
         <div class="container">
             <h2 class="section-title">Platform Features</h2>
@@ -104,132 +131,221 @@
         </div>
     </section>
 
-    <section class="market">
+    <!-- Market Data -->
+    <section class="market" id="markets">
         <div class="container">
             <h2 class="section-title">Live Market Data</h2>
             
             <div class="market-tabs">
-                <button class="tab-btn active">Industrial Equipment</button>
-                <button class="tab-btn">Aerospace Components</button>
-                <button class="tab-btn">Energy Systems</button>
-                <button class="tab-btn">Specialized Machinery</button>
+                <button class="tab-btn active" data-market="industrial">Industrial Equipment</button>
+                <button class="tab-btn" data-market="aerospace">Aerospace Components</button>
+                <button class="tab-btn" data-market="energy">Energy Systems</button>
+                <button class="tab-btn" data-market="machinery">Specialized Machinery</button>
             </div>
             
-            <table class="market-table">
-                <thead>
-                    <tr>
-                        <th>Asset</th>
-                        <th>Last Price</th>
-                        <th>24h Change</th>
-                        <th>24h Volume</th>
-                        <th>Market Cap</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>
-                            <div class="asset">
-                                <div class="asset-icon">
-                                    <i class="fas fa-industry"></i>
+            <div class="table-container">
+                <table class="market-table">
+                    <thead>
+                        <tr>
+                            <th>Asset</th>
+                            <th>Last Price</th>
+                            <th>24h Change</th>
+                            <th>24h Volume</th>
+                            <th>Market Cap</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Row 1: Caterpillar -->
+                        <tr>
+                            <td>
+                                <div class="asset">
+                                    <div class="asset-icon">
+                                        <i class="fas fa-industry"></i>
+                                    </div>
+                                    <div>
+                                        <div class="asset-name">Caterpillar Inc.</div>
+                                        <div class="asset-code">CAT</div>
+                                    </div>
                                 </div>
-                                <div>
-                                    <div class="asset-name">Industrial Turbines</div>
-                                    <div class="asset-code">ITURB</div>
+                            </td>
+                            <td class="price">$245.80</td>
+                            <td class="change price-up">+2.34%</td>
+                            <td class="volume">$42.5M</td>
+                            <td class="market-cap">$132.4B</td>
+                            <td class="action-cell">
+                                <div class="trade-buttons">
+                                    <button class="trade-btn trade-buy" data-symbol="CAT" data-price="245.80">BUY</button>
+                                    <button class="trade-btn trade-sell" data-symbol="CAT" data-price="245.80">SELL</button>
                                 </div>
-                            </div>
-                        </td>
-                        <td>$245,800</td>
-                        <td class="price-up">+2.34%</td>
-                        <td>$42.5M</td>
-                        <td>$1.2B</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div class="asset">
-                                <div class="asset-icon">
-                                    <i class="fas fa-plane"></i>
+                            </td>
+                        </tr>
+                        
+                        <!-- Row 2: Deere & Company -->
+                        <tr>
+                            <td>
+                                <div class="asset">
+                                    <div class="asset-icon">
+                                        <i class="fas fa-tractor"></i>
+                                    </div>
+                                    <div>
+                                        <div class="asset-name">Deere & Company</div>
+                                        <div class="asset-code">DE</div>
+                                    </div>
                                 </div>
-                                <div>
-                                    <div class="asset-name">Avionics Systems</div>
-                                    <div class="asset-code">AVSYS</div>
+                            </td>
+                            <td class="price">$387.50</td>
+                            <td class="change price-up">+1.25%</td>
+                            <td class="volume">$38.2M</td>
+                            <td class="market-cap">$108.9B</td>
+                            <td class="action-cell">
+                                <div class="trade-buttons">
+                                    <button class="trade-btn trade-buy" data-symbol="DE" data-price="387.50">BUY</button>
+                                    <button class="trade-btn trade-sell" data-symbol="DE" data-price="387.50">SELL</button>
                                 </div>
-                            </div>
-                        </td>
-                        <td>$187,500</td>
-                        <td class="price-up">+1.25%</td>
-                        <td>$38.2M</td>
-                        <td>$890M</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div class="asset">
-                                <div class="asset-icon">
-                                    <i class="fas fa-robot"></i>
+                            </td>
+                        </tr>
+                        
+                        <!-- Row 3: General Electric -->
+                        <tr>
+                            <td>
+                                <div class="asset">
+                                    <div class="asset-icon">
+                                        <i class="fas fa-cogs"></i>
+                                    </div>
+                                    <div>
+                                        <div class="asset-name">General Electric</div>
+                                        <div class="asset-code">GE</div>
+                                    </div>
                                 </div>
-                                <div>
-                                    <div class="asset-name">Assembly Robotics</div>
-                                    <div class="asset-code">ASROB</div>
+                            </td>
+                            <td class="price">$154.90</td>
+                            <td class="change price-down">-0.75%</td>
+                            <td class="volume">$29.8M</td>
+                            <td class="market-cap">$168.5B</td>
+                            <td class="action-cell">
+                                <div class="trade-buttons">
+                                    <button class="trade-btn trade-buy" data-symbol="GE" data-price="154.90">BUY</button>
+                                    <button class="trade-btn trade-sell" data-symbol="GE" data-price="154.90">SELL</button>
                                 </div>
-                            </div>
-                        </td>
-                        <td>$321,200</td>
-                        <td class="price-down">-0.75%</td>
-                        <td>$29.8M</td>
-                        <td>$1.5B</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div class="asset">
-                                <div class="asset-icon">
-                                    <i class="fas fa-solar-panel"></i>
+                            </td>
+                        </tr>
+                        
+                        <!-- Row 4: Honeywell -->
+                        <tr>
+                            <td>
+                                <div class="asset">
+                                    <div class="asset-icon">
+                                        <i class="fas fa-plane"></i>
+                                    </div>
+                                    <div>
+                                        <div class="asset-name">Honeywell International</div>
+                                        <div class="asset-code">HON</div>
+                                    </div>
                                 </div>
-                                <div>
-                                    <div class="asset-name">Solar Generators</div>
-                                    <div class="asset-code">SGEN</div>
+                            </td>
+                            <td class="price">$209.40</td>
+                            <td class="change price-up">+3.42%</td>
+                            <td class="volume">$51.3M</td>
+                            <td class="market-cap">$137.2B</td>
+                            <td class="action-cell">
+                                <div class="trade-buttons">
+                                    <button class="trade-btn trade-buy" data-symbol="HON" data-price="209.40">BUY</button>
+                                    <button class="trade-btn trade-sell" data-symbol="HON" data-price="209.40">SELL</button>
                                 </div>
-                            </div>
-                        </td>
-                        <td>$89,400</td>
-                        <td class="price-up">+3.42%</td>
-                        <td>$51.3M</td>
-                        <td>$670M</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div class="asset">
-                                <div class="asset-icon">
-                                    <i class="fas fa-wind"></i>
+                            </td>
+                        </tr>
+                        
+                        <!-- Row 5: Raytheon Technologies -->
+                        <tr>
+                            <td>
+                                <div class="asset">
+                                    <div class="asset-icon">
+                                        <i class="fas fa-wind"></i>
+                                    </div>
+                                    <div>
+                                        <div class="asset-name">Raytheon Technologies</div>
+                                        <div class="asset-code">RTX</div>
+                                    </div>
                                 </div>
-                                <div>
-                                    <div class="asset-name">Wind Turbine Parts</div>
-                                    <div class="asset-code">WTPRT</div>
+                            </td>
+                            <td class="price">$97.80</td>
+                            <td class="change price-up">+0.89%</td>
+                            <td class="volume">$22.4M</td>
+                            <td class="market-cap">$141.0B</td>
+                            <td class="action-cell">
+                                <div class="trade-buttons">
+                                    <button class="trade-btn trade-buy" data-symbol="RTX" data-price="97.80">BUY</button>
+                                    <button class="trade-btn trade-sell" data-symbol="RTX" data-price="97.80">SELL</button>
                                 </div>
-                            </div>
-                        </td>
-                        <td>$67,800</td>
-                        <td class="price-up">+0.89%</td>
-                        <td>$22.4M</td>
-                        <td>$410M</td>
-                    </tr>
-                </tbody>
-            </table>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="market-footer">
+                <p class="data-disclaimer">
+                    <i class="fas fa-info-circle"></i> Data updates every 10 seconds. Trading simulation with $100,000 demo account.
+                </p>
+            </div>
         </div>
     </section>
 
+    <!-- Trading Demo Section -->
+    <section class="demo-section" id="solutions">
+        <div class="container">
+            <h2 class="section-title">Start Trading Today</h2>
+            <div class="demo-container">
+                <div class="demo-card">
+                    <div class="demo-icon">
+                        <i class="fas fa-user-plus"></i>
+                    </div>
+                    <h3>Open Account</h3>
+                    <p>Get started with a free demo account. No commitment required.</p>
+                    <button class="btn btn-primary demo-action" data-action="signup">Sign Up Free</button>
+                </div>
+                
+                <div class="demo-card">
+                    <div class="demo-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>Live Demo</h3>
+                    <p>Schedule a personalized tour with our trading specialists.</p>
+                    <button class="btn btn-primary demo-action" data-action="demo">Book a Demo</button>
+                </div>
+                
+                <div class="demo-card">
+                    <div class="demo-icon">
+                        <i class="fas fa-headset"></i>
+                    </div>
+                    <h3>Support 24/7</h3>
+                    <p>Get help anytime from our dedicated trading support team.</p>
+                    <button class="btn btn-primary demo-action" data-action="support">Contact Support</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
     <footer>
         <div class="container">
             <div class="footer-content">
                 <div class="footer-col">
                     <div class="logo">
-                        <div class="logo-icon">
-                            <i class="fas fa-gem"></i>
-                        </div>
+                        <img src="logo.png" alt="Obsidian Edge Logo" class="logo-img" style="height: 50px;">
                         <div>
                             <div class="logo-text">OBSIDIAN EDGE</div>
                             <div class="logo-subtext">EQUIPMENT TRADING</div>
                         </div>
                     </div>
                     <p style="margin-top: 20px; color: var(--text-secondary);">Institutional-grade trading platform for high-value equipment and industrial assets.</p>
+                    <div class="social-links" style="margin-top: 20px; display: flex; gap: 15px;">
+                        <a href="#" style="color: var(--text-secondary);"><i class="fab fa-twitter"></i></a>
+                        <a href="#" style="color: var(--text-secondary);"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" style="color: var(--text-secondary);"><i class="fab fa-youtube"></i></a>
+                        <a href="#" style="color: var(--text-secondary);"><i class="fab fa-github"></i></a>
+                    </div>
                 </div>
                 
                 <div class="footer-col">
@@ -267,11 +383,45 @@
             </div>
             
             <div class="copyright">
-                &copy; 2023 Obsidian Edge Trading Platform. All rights reserved. | This is a class project for educational purposes only.
+                &copy; 2023 Obsidian Edge Trading Platform. All rights reserved. | 
+                <span id="currentYear"></span> | 
+                This is a commercial-grade demo for educational purposes.
             </div>
         </div>
     </footer>
 
+    <!-- Trading Modal (Hidden by default) -->
+    <div id="tradingModal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Trading Platform</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Content loaded by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- API Status Indicator -->
+    <div class="api-status" id="apiStatus">
+        <i class="fas fa-circle" style="font-size: 8px; margin-right: 8px;"></i>
+        <span id="statusText">Demo Mode</span> • 
+        <span id="dataType">Simulated Data</span>
+    </div>
+
     <script src="script.js"></script>
+    <script>
+        // Set current year in footer
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+        
+        // Simple modal close functionality
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('modal-close') || 
+                e.target.classList.contains('modal-overlay')) {
+                document.getElementById('tradingModal').style.display = 'none';
+            }
+        });
+    </script>
 </body>
 </html>
